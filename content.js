@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(
 
             resetState(wrappedElement);
 
-            setTimeout(function() {
+            setTimeout(function () {
                 writeTextSlowly(wrappedElement, textToWrite, lettersPerSecond);
             }, 2000);
         }
@@ -52,9 +52,15 @@ function writeTextSlowly(elementToWriteTo, text, lettersPerSecond) {
         position++;
         var shortenedText = text.substr(0, position);
 
-        var detached = elementToWriteTo.detach()
-            .text(shortenedText)
-            .appendTo($parent)
+        var detached = elementToWriteTo.detach();
+
+        if (elementToWriteTo.is("textarea")) {
+            detached.val(shortenedText);
+        } else {
+            detached.text(shortenedText);
+        }
+
+        detached.appendTo($parent)
             .selectRange(shortenedText.length);
 
         if (position === text.length) {
@@ -75,6 +81,12 @@ function getPerSiteActions() {
 }
 
 function resetState(elementToWriteTo) {
-    elementToWriteTo.focus()
-        .text("");
+    elementToWriteTo.focus();
+
+    var resetValue = "";
+    if (elementToWriteTo.is("textarea")) {
+        elementToWriteTo.val(resetValue);
+    } else {
+        elementToWriteTo.text(resetValue);
+    }
 }
