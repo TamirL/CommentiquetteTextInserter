@@ -23,7 +23,14 @@ chrome.runtime.onMessage.addListener(
                 return;
             }
 
-            writeTextSlowly(elementToWriteTo, textToWrite, lettersPerSecond);
+
+            var wrappedElement = $(elementToWriteTo);
+
+            resetState(wrappedElement);
+
+            setTimeout(function() {
+                writeTextSlowly(wrappedElement, textToWrite, lettersPerSecond);
+            }, 2000);
         }
     }
 );
@@ -34,10 +41,8 @@ function writeTextSlowly(elementToWriteTo, text, lettersPerSecond) {
     var position = 0;
     var writingRatio = 1000 / lettersPerSecond;
 
-    var wrappedElement = $(elementToWriteTo);
-    var $parent = wrappedElement.parent();
-    wrappedElement.focus()
-        .text("");
+    var $parent = elementToWriteTo.parent();
+
 
     var cancelId;
 
@@ -47,11 +52,10 @@ function writeTextSlowly(elementToWriteTo, text, lettersPerSecond) {
         position++;
         var shortenedText = text.substr(0, position);
 
-        var detached = wrappedElement.detach()
+        var detached = elementToWriteTo.detach()
             .text(shortenedText)
-            .appendTo($parent);
-
-        detached.selectRange(shortenedText.length);
+            .appendTo($parent)
+            .selectRange(shortenedText.length);
 
         if (position === text.length) {
             clearInterval(cancelId);
@@ -68,4 +72,9 @@ function getPerSiteActions() {
     }
 
     return function () { };
+}
+
+function resetState(elementToWriteTo) {
+    elementToWriteTo.focus()
+        .text("");
 }
