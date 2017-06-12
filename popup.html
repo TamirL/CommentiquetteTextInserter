@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Commentiquette Text Inserter</title>
+    <style>
+        textarea {
+            width: 400px;
+            height: 200px
+        }
+
+        main,
+        footer {
+            margin: 10px;
+        }
+
+        .note {
+            font-style: italic
+        }
+    </style>
+    <script type="text/javascript" src="vendor/jquery-3.2.1.slim.min.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+</head>
+
+<body>
+    <main>
+        <div>
+            <label>insert your text here:</label>
+            <textarea id="content" placeholder="bounced on my boy's dick to this comment"></textarea>
+        </div>
+        <div>
+            <label>letters per second:</label>
+            <input id="letters-per-second" type="number" value="3">
+        </div>
+        <div>
+            <button id="submitButton">aaaaaaaaannnd write!</button>
+        </div>
+    </main>
+    <footer>
+        <span class="note">
+            note: please click on the input field where you want to insert the text in and afterwards press the extenstion button, this way the extenstion knows where to insert the text
+        </span>
+    </footer>
+</body>
+
+</html>
