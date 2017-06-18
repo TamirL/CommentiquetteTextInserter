@@ -15,7 +15,7 @@ $.fn.selectRange = function (start, end) {
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        if (request.type === "write-text") {
+        if (request.type === 'write-text') {
             var textToWrite = request.payload.text;
             var lettersPerSecond = request.payload.lettersPerSecond;
             var elementToWriteTo = document.activeElement;
@@ -26,7 +26,8 @@ chrome.runtime.onMessage.addListener(
 
             var wrappedElement = $(elementToWriteTo);
 
-            resetState(wrappedElement);
+            wrappedElement.focus();
+            writeToElement(wrappedElement, '');
 
             setTimeout(function () {
                 writeTextSlowly(wrappedElement, textToWrite, lettersPerSecond);
@@ -54,11 +55,7 @@ function writeTextSlowly(elementToWriteTo, text, lettersPerSecond) {
 
         var detached = elementToWriteTo.detach();
 
-        if (elementToWriteTo.is("textarea")) {
-            detached.val(shortenedText);
-        } else {
-            detached.text(shortenedText);
-        }
+        writeToElement(detached, shortenedText);
 
         detached.appendTo($parent)
             .selectRange(shortenedText.length);
@@ -70,23 +67,23 @@ function writeTextSlowly(elementToWriteTo, text, lettersPerSecond) {
 }
 
 function getPerSiteActions() {
-    if (document.location.href.includes("youtube.com")) {
+    if (document.location.href.includes('youtube.com')) {
         var $box = $('.comment-simplebox');
+        var $submitButton = $('.comment-simplebox-submit');
+
         return function () {
             $box.addClass('focus');
+            $submitButton.removeAttr('disabled');
         }
     }
 
     return function () { };
 }
 
-function resetState(elementToWriteTo) {
-    elementToWriteTo.focus();
-
-    var resetValue = "";
-    if (elementToWriteTo.is("textarea")) {
-        elementToWriteTo.val(resetValue);
+function writeToElement(element, value) {
+    if (element.is('textarea')) {
+        element.val(value);
     } else {
-        elementToWriteTo.text(resetValue);
+        element.text(value);
     }
 }
